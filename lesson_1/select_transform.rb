@@ -53,3 +53,27 @@ end
 
 double_numbers!(my_numbers)
 my_numbers
+
+# 3. Write a solution that doubles the numbers that have odd indices
+
+def double_odd_index(numbers)
+  doubled_numbers = []
+  counter = 0
+
+  loop do
+    break if counter == numbers.size
+
+    current_number = numbers[counter]
+    current_number *= 2 if counter.odd?
+    doubled_numbers << current_number
+
+    counter += 1
+  end
+
+  doubled_numbers
+end
+
+my_numbers = [1, 4, 3, 7, 2, 6]
+double_odd_index(my_numbers) # => [1, 8, 3, 14, 2, 12]
+
+# 4. coding a method that allows you to multiply every array item by a specified value
