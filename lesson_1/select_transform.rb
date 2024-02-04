@@ -76,4 +76,22 @@ end
 my_numbers = [1, 4, 3, 7, 2, 6]
 double_odd_index(my_numbers) # => [1, 8, 3, 14, 2, 12]
 
-# 4. coding a method that allows you to multiply every array item by a specified value
+# 4. Write a method that allows you to multiply every array item by a specified value
+def multiply(array, number)
+  counter = 0
+  products = []
+
+  loop do
+    break if counter == array.size
+    current_number = array[counter]
+    products << current_number * number
+    counter +=1
+  end
+
+  products
+end
+
+my_numbers = [1, 4, 3, 7, 2, 6]
+multiply(my_numbers, 3) # => [3, 12, 9, 21, 6, 18]
+
+# 5. 
