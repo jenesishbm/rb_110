@@ -57,10 +57,20 @@ def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
+def joinor(arr, del = ', ', word = 'or')
+  case arr.size
+  when 0 then ''
+  when 1 then arr.first.to_s #join implicitly converts to string
+  when 2 then arr.join(" #{word} ")
+  else
+    arr.join(del).insert(-2, "#{word} ")
+  end
+end
+
 def player_move!(brd)
   square = ''
   loop do
-    prompt "Choose a square (#{empty_squares(brd).join(', ')}):"
+    prompt "Choose a square: #{joinor(empty_squares(brd))}"
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
     # break if the keys with empty squares include the user choice
@@ -70,8 +80,32 @@ def player_move!(brd)
   brd[square] = PLAYER_MARKER
 end
 
+def find_at_risk_square(line, board)
+  if board.values_at(*line).count('X') == 2
+    board.select{|k,v| line.include?(k) && v == ' '}.keys.first
+  else
+    nil
+  end
+end
+
+=begin simple version
 def computer_move!(brd)
   square = empty_squares(brd).sample
+  brd[square] = COMPUTER_MARKER
+end
+=end
+
+def computer_move!(brd) # BONUS, computer defense AI
+  square = nil
+  WINNING_LINES.each do |line|
+    square = find_at_risk_square(line, brd)
+    break if square
+  end
+
+  if !square
+    square = empty_squares(brd).sample
+  end
+
   brd[square] = COMPUTER_MARKER
 end
 
@@ -85,13 +119,9 @@ end
 
 def detect_winner(brd)
   WINNING_LINES.each do |line|
-    if brd[line[0]] == PLAYER_MARKER &&
-       brd[line[1]] == PLAYER_MARKER &&
-       brd[line[2]] == PLAYER_MARKER
+    if brd.values_at(*line).count(PLAYER_MARKER) == 3
       return 'Player'
-    elsif brd[line[0]] == COMPUTER_MARKER &&
-          brd[line[1]] == COMPUTER_MARKER &&
-          brd[line[2]] == COMPUTER_MARKER
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
       return 'Computer'
     end
   end
